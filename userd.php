@@ -1,36 +1,32 @@
 <?php
-
 session_start();
-if(!isset($_SESSION['email'])) {
-    header("Location: index.php");
-    exit();
+require_once "config.php";
+
+// Default search and filter
+$search_query = "";
+$filter = "title";
+
+// Allow only safe column names
+$allowed_filters = ['title', 'author', 'genre'];
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
+    $search_query = $_GET['search'];
+
+    if (isset($_GET['filter']) && in_array($_GET['filter'], $allowed_filters)) {
+        $filter = $_GET['filter'];
+    }
 }
+
+// Use '?' placeholder for mysqli
+$sql = "SELECT * FROM books WHERE $filter LIKE ? AND quantity > 0";
+$stmt = $conn->prepare($sql);
+$search_param = '%' . $search_query . '%';
+$stmt->bind_param("s", $search_param);
+$stmt->execute();
+$result = $stmt->get_result();
+$books = $result->fetch_all(MYSQLI_ASSOC);
 ?>
 
-<?php
-include 'config.php';
 
-// Fetch unique authors and genres
-$authors = mysqli_query($conn, "SELECT DISTINCT author FROM books WHERE quantity > 0");
-$genres = mysqli_query($conn, "SELECT DISTINCT genre FROM books WHERE quantity > 0");
-
-// Fetch books with search and filter
-$search = $_GET['search'] ?? '';
-$author = $_GET['author'] ?? '';
-$genre = $_GET['genre'] ?? '';
-
-$query = "SELECT * FROM books WHERE quantity > 0";
-if ($search) {
-    $query .= " AND title LIKE '%$search%'";
-}
-if ($author) {
-    $query .= " AND author='$author'";
-}
-if ($genre) {
-    $query .= " AND genre='$genre'";
-}
-$result = mysqli_query($conn, $query);
-?>
 
 
 <!DOCTYPE html>
@@ -38,7 +34,7 @@ $result = mysqli_query($conn, $query);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Dashboard - Library Management System</title>
+    <title>User Dashboard</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -50,33 +46,40 @@ $result = mysqli_query($conn, $query);
             <h2>Search Books</h2>
             <form  method="GET" class="search-form">
                 <div class="form-group">
-                    <input type="text" name="search" value="<?= $search ?>" placeholder="Search by title, author, or genre">
+                    <input type="text" name="search" value="<?php echo htmlspecialchars($search_query); ?>" placeholder="Search by title, author, or genre">
                     <button type="submit" class="btn">Search</button>
                 </div>
+                    <select name="filter" id="filter" class="search-select">
+                        <option value="title" <?php echo ($filter == "title") ? 'selected' : ''; ?>>Title</option>
+                        <option value="author" <?php echo ($filter == "author") ? 'selected' : ''; ?>>Author</option>
+                        <option value="genre" <?php echo ($filter == "genre") ? 'selected' : ''; ?>>Genre</option>
+                    </select>
             </form>
-
-            <div class="book-list">
-                <h3>Available Books</h3>
-                        <?php
-                            include('config.php');
-                            $sqlSelect = "SELECT * FROM books";
-                            $result = mysqli_query($conn,$sqlSelect);
-                            while($data = mysqli_fetch_array($result)){
-                                // $formId = "editbook" . $data['id'];
-                            ?>   
-                                <div class="book-item">
-                                <h4><?php echo $data['title']; ?></h4>
-                                <p>Author: <?php echo $data['author']; ?></p>
-                                <p>ISBN: <?php echo $data['isbn']; ?></p>
-                                <p>Genre: <?php echo $data['genre']; ?></p>
-                                <p>Available: <?php echo $data['quantity']; ?>/<?php echo $data['quantity']; ?></p>
-                                <a href="" class="btn">Borrow</a>
-                                <!-- <button class="btn" disabled>Not Available</button> -->
-                            </div>
-                    <!-- <p>No books available.</p> -->
-                    <?php    
-                    }?> 
+            <div class="no-results" <?php echo empty($books) ? 'style="display:block;"' : 'style="display:none;"'; ?>>
+            <p>No books available.</p>
             </div>
+
+
+            <div class="book-list" <?php echo !empty($books) ? 'style="display:block;"' : 'style="display:none;"'; ?>>
+            <h3>Available Books</h3>
+                <?php if (count($books) > 0): ?>
+                    <?php foreach ($books as $book): ?>
+                        <div class="book-item">
+                            <h4><?php echo htmlspecialchars($book['title']); ?></h4>
+                            <p>Author: <?php echo htmlspecialchars($book['author']); ?></p>
+                            <p>ISBN: <?php echo htmlspecialchars($book['isbn']); ?></p>
+                            <p>Genre: <?php echo htmlspecialchars($book['genre']); ?></p>
+                            <p>Available Quantity: <?php echo $book['quantity']; ?>/<?php echo $book['quantity']; ?></p>
+
+                            <form action="borrow.php" method="POST">
+                                <input type="hidden" name="book_id" value="<?php echo $book['bookid']; ?>">
+                                <button type="submit" class="btn">Borrow</button>
+                            </form>
+                        </div>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </div> 
+
         </section>
         <section class="loan-management">
             <h2>My Borrowed Books</h2>
@@ -90,6 +93,8 @@ $result = mysqli_query($conn, $query);
                     <p>No active loans.</p>
             </div>
         </section>
+
+        
         <a onclick="window.location.href='logout.php'" class="btn logout-btn">Logout</a>
     </div>
     
