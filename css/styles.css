@@ -1,0 +1,246 @@
+:root {
+    --primary-color: #4a90e2;
+    --secondary-color: #2c3e50;
+    --success-color: #27ae60;
+    --error-color: #e74c3c;
+    --background-color: #f5f6fa;
+    --text-color: #2c3e50;
+    --border-color: #dcdde1;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    
+}
+.containerd {
+    width: 100%;
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    
+}
+
+
+/* .containera {
+    width: 100vw;  Full viewport width
+    height: 100vh; Full viewport height
+    display: flex;
+    flex-direction: row; Stack heading on top
+    align-items: center; Center horizontally
+    justify-content: center; Center vertically
+    gap: 20px; Space between child elements
+} */
+
+.form-title {
+    text-align: center;
+    margin-bottom: 2rem;
+    color: var(--secondary-color);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+    display: none;
+}
+
+.aform-group {
+    margin-bottom: 1.5rem;
+    /* display: none; */
+}
+
+.form-group.active{
+    display: block;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+input, select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+input:focus, select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+.btn:hover {
+    background-color: #357abd;
+}
+
+.btn:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+}
+
+.edit-btn {
+    background-color: var(--success-color);
+}
+
+.edit-btn:hover {
+    background-color: #219a52;
+}
+
+.cancel-btn {
+    background-color: var(--border-color);
+}
+
+.cancel-btn:hover {
+    background-color: #bdc3c7;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+    background-color: var(--error-color);
+    color: white;
+}
+
+
+section {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+section h2 {
+    margin-bottom: 1rem;
+    color: var(--secondary-color);
+}
+
+.book-item, .user-item, .loan-item {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.book-item h4, .user-item h4, .loan-item h4 {
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.book-details {
+    margin-bottom: 1rem;
+}
+
+.edit-form {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.search-form {
+    margin-bottom: 2rem;
+}
+
+.search-form .form-group {
+    display: flex;
+    gap: 1rem;
+}
+
+.search-form input {
+    flex: 1;
+}
+
+.search-form .btn {
+    width: auto;
+}
+
+.add-form {
+    margin-bottom: 2rem;
+}
+
+.logout-btn {
+    background-color: var(--error-color);
+    margin-top: 2rem;
+}
+
+.logout-btn:hover {
+    background-color: #c0392b;
+}
+
+.delete-btn {
+    background-color: var(--error-color);
+    margin-top: 1rem;
+}
+
+.delete-btn:hover {
+    background-color: #c0392b;
+}
+
+.delete-form {
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .search-form .form-group {
+        flex-direction: column;
+    }
+
+    .search-form .btn {
+        width: 100%;
+    }
+}
+
+.error-message {
+    padding: 12px;
+    background: #f8d7da;
+    border-radius: 6px;
+    font-size: 16px;
+    color: #a42834;
+    text-align: center;
+    margin-bottom: 20px;
+}
