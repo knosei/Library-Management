@@ -2,11 +2,9 @@
 session_start();
 require_once "config.php";
 
-// Default search and filter
 $search_query = "";
 $filter = "title";
 
-// Allow only safe column names
 $allowed_filters = ['title', 'author', 'genre'];
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
     $search_query = $_GET['search'];
@@ -16,7 +14,6 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['search'])) {
     }
 }
 
-// Use '?' placeholder for mysqli
 $sql = "SELECT * FROM books WHERE $filter LIKE ? AND quantity > 0";
 $stmt = $conn->prepare($sql);
 $search_param = '%' . $search_query . '%';
@@ -25,8 +22,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $books = $result->fetch_all(MYSQLI_ASSOC);
 ?>
-
-
 
 
 <!DOCTYPE html>
@@ -69,32 +64,54 @@ $books = $result->fetch_all(MYSQLI_ASSOC);
                             <p>Author: <?php echo htmlspecialchars($book['author']); ?></p>
                             <p>ISBN: <?php echo htmlspecialchars($book['isbn']); ?></p>
                             <p>Genre: <?php echo htmlspecialchars($book['genre']); ?></p>
-                            <p>Available Quantity: <?php echo $book['quantity']; ?>/<?php echo $book['quantity']; ?></p>
+                            <p>Available Quantity: <?php echo $book['quantity']; ?></p>
 
-                            <form action="borrow.php" method="POST">
+                            <form  method="POST">
                                 <input type="hidden" name="book_id" value="<?php echo $book['bookid']; ?>">
-                                <button type="submit" class="btn">Borrow</button>
+                                <a href="borrow.php?bookid=<?= $book['bookid'] ?>" type="submit" class="btn">Borrow</a>
                             </form>
                         </div>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </div> 
-
         </section>
+
         <section class="loan-management">
-            <h2>My Borrowed Books</h2>
-            <div class="loan-list">
-                        <div class="loan-item">
-                            <h4>{{ loan.book.title }}</h4>
-                            <p>Borrowed: {{ loan.borrow_date.strftime('%Y-%m-%d') }}</p>
-                            <p>Due: {{ loan.return_date.strftime('%Y-%m-%d') }}</p>
-                            <a href="{{ url_for('return_book', loan_id=loan.id) }}" class="btn">Return Book</a>
-                        </div>
-                    <p>No active loans.</p>
+        <h2>My Borrowed Books</h2>
+        <div class="loan-list">
+        <?php
+        // Assume session_start() and $conn setup already exist
+        $userid = $_SESSION['userid'];
+        $stmt = $conn->prepare("
+        SELECT loans.loanid, books.title, loans.borrowdate, loans.duedate 
+        FROM loans 
+        JOIN books ON loans.bookid = books.bookid 
+        WHERE loans.userid = ? AND loans.returndate IS NULL
+    ");
+        $stmt->bind_param("i", $userid);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0):
+            while ($loan = $result->fetch_assoc()):
+        ?>
+            <div class="loan-item">
+                <h4><?= htmlspecialchars($loan['title']) ?></h4>
+                <p>Borrowed: <?= date("Y-m-d", strtotime($loan['borrowdate'])) ?></p>
+                <p>Due: <?= date("Y-m-d", strtotime($loan['duedate'])) ?></p>
+                <a href="returnbook.php?loanid=<?= $loan['loanid'] ?>" class="btn">Return Book</a>
             </div>
+        <?php
+            endwhile;
+        else:
+        ?>
+            <p>No active loans.</p>
+        <?php endif; ?>
+        </div>
         </section>
 
-        
+
+
         <a onclick="window.location.href='logout.php'" class="btn logout-btn">Logout</a>
     </div>
     
