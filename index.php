@@ -27,7 +27,7 @@ function isActiveForm($formName, $activeForm) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LMS</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/sstyles.css?v=<?= time(); ?>">
 </head>
 <body>
     <div class="container">
@@ -70,7 +70,6 @@ function isActiveForm($formName, $activeForm) {
         </form>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Edit book</title>
+    <link rel="stylesheet" href="css/styles.css?v=<?= time(); ?>">
 </head>
 <body>
 <section class="book-management">
@@ -40,16 +40,10 @@
     </div>
     <input type="hidden" value="<?php echo $id; ?>" name="id">
     <button type="submit" name ="edit" class="btn">Update</button>
-    <!-- <button type="button" class="btn cancel-btn" onclick="toggleEditForm('edit-form-{{ book.id }}')">Cancel</button> -->
     <?php
-            }
-            // else{
-            //     echo "<h3>Book Does Not Exist</h3>";
-            // }
-            ?>
+    }
+    ?>
 </form>
 </section>
-
-
 </body>
 </html>

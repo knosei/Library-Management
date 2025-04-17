@@ -30,7 +30,7 @@ $books = $result->fetch_all(MYSQLI_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/styles.css?v=<?= time(); ?>">
 </head>
 <body>
     <div class="container dashboard">
@@ -80,7 +80,6 @@ $books = $result->fetch_all(MYSQLI_ASSOC);
         <h2>My Borrowed Books</h2>
         <div class="loan-list">
         <?php
-        // Assume session_start() and $conn setup already exist
         $userid = $_SESSION['userid'];
         $stmt = $conn->prepare("
         SELECT loans.loanid, books.title, loans.borrowdate, loans.duedate 
@@ -109,8 +108,6 @@ $books = $result->fetch_all(MYSQLI_ASSOC);
         <?php endif; ?>
         </div>
         </section>
-
-
 
         <a onclick="window.location.href='logout.php'" class="btn logout-btn">Logout</a>
     </div>

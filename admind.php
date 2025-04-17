@@ -86,21 +86,18 @@ if(!isset($_SESSION['email'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Library Management System</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/sstyles.css?v=<?= time(); ?>">
 </head>
 <body>
     <div class="containerd">
-        <h1>Admin Dashboard</h1>
-        <h1>Welcome, <span><?= $_SESSION['name']; ?></span></h1>
-        <!-- {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert">{{ message }}</div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %} -->
+        <div class="dashheader">
+         <h1>Admin Dashboard</h1>
+        <h1>Welcome, <span><?= $_SESSION['name']; ?></span></h1>   
+        </div>
+
         <section class="book-management">
             <h2>Book Management</h2>
+            <div class="booksflex">
             <form action="process.php" method="post" class="add-form">
                 <h3>Add New Book</h3>
                 <div class="aform-group">
@@ -128,14 +125,12 @@ if(!isset($_SESSION['email'])) {
 
             <div class="book-list">
                 <h3>Book List</h3>
-                        
                             <div class="book-details">
                             <?php
                             include('config.php');
                             $sqlSelect = "SELECT * FROM books";
                             $result = mysqli_query($conn,$sqlSelect);
                             while($data = mysqli_fetch_array($result)){
-                                // $formId = "editbook" . $data['id'];
                             ?>    
                                 <div class="book-item">
                                 <h4><?php echo $data['title']; ?></h4>
@@ -149,44 +144,17 @@ if(!isset($_SESSION['email'])) {
                                     <a class="btn delete-btn" href="deletebook.php?id=<?php echo $data['bookid']; ?>">Delete Book</a>
                                 </form>
                             </div>     
-                            <!-- <form action="{{ url_for('update_book', book_id=book.id) }}" method="POST" class="edit-form" id="formId" style="display: none;">
-                                <div class="aform-group">
-                                    <label for="title-{{ book.id }}">Title</label>
-                                    <input type="text" id="title-{{ book.id }}" name="title" value="{{ book.title }}" required>
-                                </div>
-                                <div class="aform-group">
-                                    <label for="author-{{ book.id }}">Author</label>
-                                    <input type="text" id="author-{{ book.id }}" name="author" value="{{ book.author }}" required>
-                                </div>
-                                <div class="aform-group">
-                                    <label for="isbn-{{ book.id }}">ISBN</label>
-                                    <input type="text" id="isbn-{{ book.id }}" name="isbn" value="{{ book.isbn }}" required>
-                                </div>
-                                <div class="aform-group">
-                                    <label for="genre-{{ book.id }}">Genre</label>
-                                    <input type="text" id="genre-{{ book.id }}" name="genre" value="{{ book.genre }}" required>
-                                </div>
-                                <div class="aform-group">
-                                    <label for="quantity-{{ book.id }}">Quantity</label>
-                                    <input type="number" id="quantity-{{ book.id }}" name="quantity" value="{{ book.quantity }}" required min="1">
-                                </div>
-                                <button type="submit" class="btn">Update</button>
-                                <button type="button" class="btn cancel-btn" onclick="toggleEditForm('edit-form-{{ book.id }}')">Cancel</button>
-                            </form>
-                             -->
                             <?php    
                             }?> 
                             <!-- <p>No books available.</p> -->
                         </div>
-                    <!-- {% endfor %}
-                {% else %} -->
-                    
-                <!-- {% endif %} -->
+            </div>
             </div>
         </section>
 
         <section class="user-management">
             <h2>User Management</h2>
+            <div class="booksflex">
             <form action="process.php" method="post" class="add-form">
                 <h3>Add New User</h3>
                 <div class="aform-group">
@@ -214,7 +182,7 @@ if(!isset($_SESSION['email'])) {
 
             <div class="user-list">
                 <h3>User List</h3>
-                        <div class="user-item">
+                        <div class="book-details">
                         <?php
                             include('config.php');
                             $sqlSelect = "SELECT * FROM users";
@@ -222,18 +190,20 @@ if(!isset($_SESSION['email'])) {
                             while($data = mysqli_fetch_array($result)){
                                 // $formId = "editbook" . $data['id'];
                             ?> 
+                            <div class="book-item">
                             <h4><?php echo $data['name']; ?></h4>
                             <p>Email: <?php echo $data['email']; ?></p>
                             <p>Role: <?php echo $data['role']; ?></p>
-                            <!-- <p>Active Loans: {{ user.loans|selectattr('returned', 'equalto', false)|list|length }}/{{ user.maximum_books }}</p> -->
                             <a class="btn edit-btn" href="edituser.php? id=<?php echo $data['userid']; ?>" >Edit User</a>
                             <form action="" method="POST" class="delete-form">
                             <a class="btn delete-btn" href="deleteuser.php?id=<?php echo $data['userid']; ?>">Delete User</a>
                             </form>
+                            </div>
                             <?php    
                             }?> 
                         </div>
-                    <!-- <p>No users registered.</p> -->
+
+            </div>
             </div>
         </section>
         <a onclick="window.location.href='logout.php'" class="btn logout-btn">Logout</a>
@@ -242,8 +212,7 @@ if(!isset($_SESSION['email'])) {
     <script>
         function toggleEditForm(formId) {
             const form = document.getElementById(formId);
-            // form.style.display = form.style.display === 'none' ? 'block' : 'none';
-            if (!form) return; // Prevents errors if ID is incorrect
+            if (!form) return; 
             if (form.style.display === '' || form.style.display === 'none') {
                 form.style.display = 'block';
             } else {

@@ -33,7 +33,7 @@ body {
 }
 .containerd {
     width: 100%;
-    max-width: 500px;
+    /* max-width: 800px; */
     margin: 2rem auto;
     padding: 2rem;
     background-color: white;
@@ -43,6 +43,17 @@ body {
     
 }
 
+.booksflex {
+    display: flex;
+    justify-content: space-between; 
+    flex-wrap: wrap; 
+    align-items: flex-start; 
+}
+
+.dashheader {
+    display: flex;
+    justify-content: space-between; 
+}
 
 .form-title {
     text-align: center;
@@ -158,7 +169,10 @@ section h2 {
 }
 
 .book-details {
-    margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;      
+    width: 700px;
 }
 
 .edit-form {
@@ -186,6 +200,7 @@ section h2 {
 
 .add-form {
     margin-bottom: 2rem;
+    width: 30%;
 }
 
 .logout-btn {

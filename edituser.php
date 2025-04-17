@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Edit User</title>
+    <link rel="stylesheet" href="css/styles.css?v=<?= time(); ?>">
 </head>
 <body>
 <section class="user-management">
@@ -39,13 +39,10 @@
                 </div>
         <input type="hidden" value="<?php echo $id; ?>" name="id">
         <button type="submit" name ="edituser" class="btn">Update</button>
-    <!-- <button type="button" class="btn cancel-btn" onclick="toggleEditForm('edit-form-{{ book.id }}')">Cancel</button> -->
     <?php
             }
             ?>
 </form>
         </section>
-
-
 </body>
 </html>
